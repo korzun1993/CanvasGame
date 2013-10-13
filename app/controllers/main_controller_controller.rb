@@ -9,4 +9,14 @@ class MainControllerController < ApplicationController
     end
     render :nothing => true
   end
+
+  def get_game
+    if (Player.all.size==2)
+      render "index.html.erb"
+    end
+    else render :nothing => true;
+  end
+
+  def kill_ball (ball_id, player_token)
+  end
 end
