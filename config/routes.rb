@@ -4,7 +4,8 @@ Game::Application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'main_controller#index'
+  #root 'main_controller#index'
+  root :controller => 'main_controller', :action => 'index'
   get "start_game" => 'main_controller#start'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
