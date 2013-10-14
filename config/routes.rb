@@ -7,6 +7,7 @@ Game::Application.routes.draw do
   #root 'main_controller#index'
   root :controller => 'main_controller', :action => 'index'
   get "start_game" => 'main_controller#start'
+  get "get_game" =>'main_controller#get_game'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

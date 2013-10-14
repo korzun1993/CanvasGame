@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131013091155) do
+ActiveRecord::Schema.define(version: 20131013180308) do
 
   create_table "balls", force: true do |t|
     t.string   "kind"
@@ -19,6 +19,8 @@ ActiveRecord::Schema.define(version: 20131013091155) do
     t.integer  "killer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "x_coordinate"
+    t.integer  "ball_id"
   end
 
   create_table "players", force: true do |t|
