@@ -3,42 +3,61 @@ var canvas = CE.defines("canvas_id").
         canvas.Scene.call("MyScene");
     });
 
+
+
 var BALLHEIGHT = 40;
 var NUMBEROFBALLS = 70;
 var USERTOKEN =''  ;
+IS_GAME_STARTED =false;
+
+
 
 function getGame(){
-  alert ('func getGame')
+  //alert ('func getGame')
+  var res
   CE.ajax({url:"/get_game",success: function (data){
       alert (data)
+
       if (data!="null") {
+          res =true;
+          alert ('result'+res)
+      IS_GAME_STARTED=true;
+       alert ('IS_GAME_STARTED'+IS_GAME_STARTED)
+      scene.has_balls=true;
       scene.start_button.opacity=0
-      alert ('data non undefined')
+      //alert ('data non undefined')
       var balls=  CE.parseJSON(data)
       var date = new Date();
       scene.beginTime = date.getTime();
+      alert('IS_GAME_STARTED'+IS_GAME_STARTED)
       scene.elems=[]
       for (var i=0; i<NUMBEROFBALLS; i++) {
-         // alert (balls[i]['id'])
           scene.elems.push(scene.createElement())
           scene.elems[i].itemID=balls[i]['id']
           scene.elems[i].x=balls[i]['x_coordinate']
           scene.elems[i].y=i * BALLHEIGHT/((NUMBEROFBALLS + 1)) - NUMBEROFBALLS/2 * BALLHEIGHT;
           scene.elems[i].kind=balls[i]['kind']
-          //alert ('NUMBEROFBALLS')
-          //alert (NUMBEROFBALLS)
-          //alert (scene.elems[i].x)
-          //alert (scene.elems[i].y)
-          //alert (scene.elems[i].kind)
           scene.stage.append(scene.elems[i])
           scene.elems[i].on('click', function (){
               this.opacity = 0;
-              // request to ruby server kill ball
+              CE.ajax({url:"/kill_ball",
+                  type: "PUT",
+                  data: {ball_id:this.itemID, player_token:USERTOKEN},
+                  success: function (data){
+                  alert ('success of kill har ')
+              }})
           });
+
 
       }
 
-      }}})
+      }},
+  error: function(data){alert (data)}
+  })
+    if (res!==undefined)
+    return true
+    else
+    return false
 }
 
 function draw() {
@@ -55,6 +74,23 @@ function draw() {
     }
     scene.stage.refresh();
 }
+
+ function getKilledBalls(){
+     CE.ajax({
+         url:"/get_killed_balls",
+         type: "POST",
+         success: function (data){
+             if (scene.elems!==undefined){
+                 result=CE.parseJSON(data)
+                 for (var i=0; i<result.size();i++)
+                    for (var j=0; j<scene.elems.size(); j++){
+                          if (scene.elems[j].itemID==result[i]['id'])
+                            scene.elems[i].opacity=0;
+                    }
+             }
+         }
+     })
+ }
 
 scene = canvas.Scene.new({
     name: "MyScene",
@@ -79,14 +115,13 @@ scene = canvas.Scene.new({
         stage.append(this.start_button);  //*/
         this.start_button.on("click",function(f){
         CE.ajax({url:"/start_game",success: function (x){
-            ///USERTOKEN=x
+         USERTOKEN=x
+            // infinite loop
+         while(scene.elems===undefined){getGame()}
+         }})
+         })
 
-            if (scene.elems==undefined) {
-            getGame();
-            }
-         }
-         })
-         })
+
 
     },
 
@@ -97,7 +132,7 @@ render: function(stage) {
     stage.refresh();
 }
 });
-
+//setInterval(getKilledBalls,500)
 
 //function draw() {
 //	scene.stage.refresh();

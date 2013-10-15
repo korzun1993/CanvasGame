@@ -8,6 +8,8 @@ Game::Application.routes.draw do
   root :controller => 'main_controller', :action => 'index'
   get "start_game" => 'main_controller#start'
   get "get_game" =>'main_controller#get_game'
+  put "kill_ball" => 'main_controller#kill_ball'
+  post "get_killed_balls"=>'main_controller#get_killed_balls'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
