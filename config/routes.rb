@@ -10,6 +10,7 @@ Game::Application.routes.draw do
   get "get_game" =>'main_controller#get_game'
   put "kill_ball" => 'main_controller#kill_ball'
   post "get_killed_balls"=>'main_controller#get_killed_balls'
+  post "/get_results"=>'main_controller#get_results'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

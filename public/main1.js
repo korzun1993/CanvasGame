@@ -10,26 +10,57 @@ var NUMBEROFBALLS = 70;
 var USERTOKEN =''  ;
 IS_GAME_STARTED =false;
 
+setInterval(checkElems,1000);
+function checkElems(){
+    if (scene.elems===undefined) getGame();
+}
 
+setInterval(checkKilled,1000);
+function checkKilled(){
+    CE.ajax({url:"/get_killed_balls",
+        type: "POST",
+        success: function (data){
+        if (data!="[]"){
+            balls=CE.parseJSON(data)
+            console.log(balls[0])
+        if (scene.elems!==undefined)
+        {
+            for (var i=0; i<balls.length; i++){
+                console.log (balls[i]['id'])
+
+                for (var j=0; j<scene.elems.length; j++){
+                    console.log ('itemID'+scene.elems[j].itemID)
+                    if (balls[i]['id']==scene.elems[j].itemID)
+                    {
+                         scene.elems[j].opacity=0;
+                    }
+                }
+        }
+        }
+        }
+}
+    })
+}
 
 function getGame(){
   //alert ('func getGame')
   var res
   CE.ajax({url:"/get_game",success: function (data){
-      alert (data)
+      //alert (data)
 
-      if (data!="null") {
+      if (data!="[]") {
           res =true;
-          alert ('result'+res)
+          setInterval(exit,40000)
+          //alert ('result'+res)
       IS_GAME_STARTED=true;
-       alert ('IS_GAME_STARTED'+IS_GAME_STARTED)
+      // alert ('IS_GAME_STARTED'+IS_GAME_STARTED)
       scene.has_balls=true;
       scene.start_button.opacity=0
-      //alert ('data non undefined')
+      //1 ('data non undefined')
       var balls=  CE.parseJSON(data)
       var date = new Date();
       scene.beginTime = date.getTime();
-      alert('IS_GAME_STARTED'+IS_GAME_STARTED)
+      //1('IS_GAME_STARTED'+IS_GAME_STARTED)
       scene.elems=[]
       for (var i=0; i<NUMBEROFBALLS; i++) {
           scene.elems.push(scene.createElement())
@@ -40,24 +71,23 @@ function getGame(){
           scene.stage.append(scene.elems[i])
           scene.elems[i].on('click', function (){
               this.opacity = 0;
-              CE.ajax({url:"/kill_ball",
+              $.ajax({url:"/kill_ball",
                   type: "PUT",
-                  data: {ball_id:this.itemID, player_token:USERTOKEN},
+                  data: {ball_id: this.itemID, player_token:USERTOKEN},
                   success: function (data){
-                  alert ('success of kill har ')
+                  //alert(this.itemID+"  "+USERTOKEN)
               }})
           });
 
 
       }
 
-      }},
-  error: function(data){alert (data)}
+      }
+
+  }
+
   })
-    if (res!==undefined)
-    return true
-    else
-    return false
+
 }
 
 function draw() {
@@ -117,7 +147,6 @@ scene = canvas.Scene.new({
         CE.ajax({url:"/start_game",success: function (x){
          USERTOKEN=x
             // infinite loop
-         while(scene.elems===undefined){getGame()}
          }})
          })
 
@@ -132,6 +161,17 @@ render: function(stage) {
     stage.refresh();
 }
 });
+
+function exit(){
+    $.ajax({url:"/get_results",
+        type: "POST",
+        data: {token:USERTOKEN},
+        success: function (data){
+            alert (data)
+        }})
+
+}
+
 //setInterval(getKilledBalls,500)
 
 //function draw() {
