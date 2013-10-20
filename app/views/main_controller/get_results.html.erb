@@ -1,56 +1,58 @@
 <%if @player1.token ==@token%>
-<h1>Ваш счёт</h1>
+<h1>Your points</h1>
 <%else%>
-<h1>Счет противника</h1>
+<h1>Opponent's points</h1>
 <%end%>
 <table>
   <tr >
-    <td style="font-size: 100%; font-family: sans-serif"> Синие</td>
+    <td style="font-size: 100%; font-family: sans-serif"> Blue</td>
     <td style="font-size: 100%; font-family: sans-serif"> <%=@count_hash1[:blue_ball]%> </td>
   </tr>
   <tr>
   <tr >
-    <td style="font-size: 100%; font-family: sans-serif"> Зеленые </td>
+    <td style="font-size: 100%; font-family: sans-serif"> Green </td>
     <td style="font-size: 100%; font-family: sans-serif"> <%=@count_hash1[:green_ball]%> </td>
   </tr>
   <tr >
-    <td style="font-size: 100%; font-family: sans-serif"> Красные </td>
+    <td style="font-size: 100%; font-family: sans-serif"> Red </td>
     <td style="font-size: 100%; font-family: sans-serif"> <%=@count_hash1[:red_ball]%> </td>
   </tr>
   <tr >
-    <td style="font-size: 100%; font-family: sans-serif"> Желтые </td>
+    <td style="font-size: 100%; font-family: sans-serif"> Yellow </td>
     <td style="font-size: 100%; font-family: sans-serif"> <%=@count_hash1[:yellow_ball]%> </td>
   </tr>
   <tr>
 </table>
 <%if @player2.token ==@token%>
-    <h1>Ваш счёт</h1>
+    <h1>Your points</h1>
 <%else%>
-    <h1>Счет противника</h1>
+    <h1>Opponent's points</h1>
 <%end%>
 <table>
   <tr >
-    <td style="font-size: 100%; font-family: sans-serif"> Синие</td>
+    <td style="font-size: 100%; font-family: sans-serif"> Blue</td>
     <td style="font-size: 100%; font-family: sans-serif"> <%=@count_hash2[:blue_ball]%> </td>
   </tr>
   <tr>
   <tr >
-    <td style="font-size: 100%; font-family: sans-serif"> Зеленые </td>
+    <td style="font-size: 100%; font-family: sans-serif"> Green </td>
     <td style="font-size: 100%; font-family: sans-serif"> <%=@count_hash2[:green_ball]%> </td>
   </tr>
   <tr >
-    <td style="font-size: 100%; font-family: sans-serif"> Красные </td>
+    <td style="font-size: 100%; font-family: sans-serif"> Red </td>
     <td style="font-size: 100%; font-family: sans-serif"> <%=@count_hash2[:red_ball]%> </td>
   </tr>
   <tr >
-    <td style="font-size: 100%; font-family: sans-serif"> Желтые </td>
+    <td style="font-size: 100%; font-family: sans-serif"> Yellow </td>
     <td style="font-size: 100%; font-family: sans-serif"> <%=@count_hash2[:yellow_ball]%> </td>
   </tr>
   <tr>
 </table>
 
 <%if @player1.token ==@token && @result1>=@result2 || @player2.token ==@token && @result2>=@result1%>
-    <h1>Вы победитель</h1>
+    <h1>You are winner</h1>
 <%else%>
-    <h1>Вы прогиграли к сожалению</h1>
+    <h1>Unfortunately,you are looser </h1>
 <%end%>
+
+<a href="/index"> Start again </a>

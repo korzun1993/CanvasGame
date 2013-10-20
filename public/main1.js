@@ -9,14 +9,18 @@ var BALLHEIGHT = 40;
 var NUMBEROFBALLS = 70;
 var USERTOKEN =''  ;
 IS_GAME_STARTED =false;
+window.GAME_OVER=false;
 
 setInterval(checkElems,1000);
 function checkElems(){
-    if (scene.elems===undefined) getGame();
+    if (scene.elems===undefined) {getGame()}
+
 }
 
 setInterval(checkKilled,1000);
-function checkKilled(){
+function checkKilled(flag){
+    console.log(scene.game_over)
+    if (scene.game_over===undefined)   {
     CE.ajax({url:"/get_killed_balls",
         type: "POST",
         success: function (data){
@@ -38,8 +42,11 @@ function checkKilled(){
         }
         }
         }
+
 }
     })
+    }
+
 }
 
 function getGame(){
@@ -50,7 +57,8 @@ function getGame(){
 
       if (data!="[]") {
           res =true;
-          setInterval(exit,40000)
+          //alert (data)
+
           //alert ('result'+res)
       IS_GAME_STARTED=true;
       // alert ('IS_GAME_STARTED'+IS_GAME_STARTED)
@@ -105,22 +113,6 @@ function draw() {
     scene.stage.refresh();
 }
 
- function getKilledBalls(){
-     CE.ajax({
-         url:"/get_killed_balls",
-         type: "POST",
-         success: function (data){
-             if (scene.elems!==undefined){
-                 result=CE.parseJSON(data)
-                 for (var i=0; i<result.size();i++)
-                    for (var j=0; j<scene.elems.size(); j++){
-                          if (scene.elems[j].itemID==result[i]['id'])
-                            scene.elems[i].opacity=0;
-                    }
-             }
-         }
-     })
- }
 
 scene = canvas.Scene.new({
     name: "MyScene",
@@ -145,8 +137,11 @@ scene = canvas.Scene.new({
         stage.append(this.start_button);  //*/
         this.start_button.on("click",function(f){
         CE.ajax({url:"/start_game",success: function (x){
-         USERTOKEN=x
-            // infinite loop
+         info=CE.parseJSON(x)
+         USERTOKEN=info[0]
+         alert ('Your balls are '+info[1])
+
+            setInterval(exit,60000)
          }})
          })
 
@@ -167,8 +162,10 @@ function exit(){
         type: "POST",
         data: {token:USERTOKEN},
         success: function (data){
-            alert (data)
+            $('#canvas_id').replaceWith(data)
         }})
+        scene.game_over=true;
+
 
 }
 

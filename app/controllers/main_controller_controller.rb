@@ -11,8 +11,13 @@ class MainControllerController < ApplicationController
      token = Time.now.to_i-Time.at(0).to_i
      puts token
      p=Player.create ({:token =>token.to_i})
+     res=[]
+     res<< token
+     players=Player.all.to_a
+     array=['red', 'blue']
+     res<<array[players.size-1]
     end
-    render :json => token
+    render :json => res
   end
 
   def create_balls (from, to, kind_of_ball)
@@ -65,6 +70,7 @@ class MainControllerController < ApplicationController
     @count_hash1 = get_hash_of_killed_balls_by_player(@player1.id)
     point_hash={:red_ball=>5, :blue_ball=>-5, :green_ball=>-1, :yellow_ball=>-1}
     @result1 = count_points_for_player(@count_hash1, point_hash)
+    puts '1', @result1
     @player2=Player.all.to_a[1]
     @count_hash2=get_hash_of_killed_balls_by_player(@player2.id)
     point_hash={:red_ball=>-5, :blue_ball=>5, :green_ball=>-1,:yellow_ball=>-1}
@@ -73,6 +79,8 @@ class MainControllerController < ApplicationController
   end
 
   def  count_points_for_player(hash, point_hash)
+    puts 'hash', hash
+    puts 'po', point_hash
     res=hash[:red_ball]*point_hash[:red_ball]
     +hash[:blue_ball]*point_hash[:blue_ball]+
     +hash[:green_ball]*point_hash[:green_ball]+
@@ -81,11 +89,11 @@ class MainControllerController < ApplicationController
 
 
   def get_hash_of_killed_balls_by_player (id)
-    array=["red_ball", "blue_ball", "green_ball", "yellow_ball"]
+    array=[:red_ball, :blue_ball, :green_ball, :yellow_ball]
     result_hash ={}
     array.each {|i|
-     count=Ball.where(:player_id=>id, :kind => i).all.to_a.size
-     result_hash.push(:i=>count)
+     count=Ball.where(:killer_id=>id).where(:kind => i).to_a.size
+     result_hash[i]=count
     }
     result_hash
   end

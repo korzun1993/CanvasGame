@@ -11,7 +11,8 @@ Game::Application.routes.draw do
   put "kill_ball" => 'main_controller#kill_ball'
   post "get_killed_balls"=>'main_controller#get_killed_balls'
   post "/get_results"=>'main_controller#get_results'
-  # Example of regular route:
+  get "/index" => 'main_controller#index'
+    # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
